@@ -65,7 +65,7 @@
                             <td>{{ $vehicle->id }}</td>
                             <td>{{ $vehicle->type }}</td>
                             <td>{{ $vehicle->cc }}</td>
-                            <td>{{ $vehicle->price }}</td>
+                            <td>Rp {{ number_format($vehicle->price, 0, ',', '.') }}</td>
                             <td>
                                 <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
                                     class="btn btn-warning btn-sm">Edit</a>
@@ -96,7 +96,7 @@
                         <tr>
                             {{-- <td>{{ $transaction->id }}</td> --}}
                             <td>{{ $transaction->customer->name }}</td>
-                            <td>{{ $transaction->amount }}</td>
+                            <td>Rp {{ number_format($transaction->amount, 0, ',', '.') }}</td>
                             <td>{{ $transaction->created_at }}</td>
                             <td>{{ $transaction->status }}</td>
                         </tr>

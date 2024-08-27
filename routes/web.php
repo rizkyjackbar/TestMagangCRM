@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WashController;
 use App\Http\Controllers\CustomerController;
@@ -15,13 +14,13 @@ Route::post('/customer/store', [CustomerController::class, 'store'])->name('cust
 // Route riwayat
 Route::get('/history', [WashController::class, 'history'])->name('transaction.history');
 
-// Admin routes
+// Admin login route (outside of the auth middleware group)
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login');
+
+// Admin routes (protected by auth middleware)
 Route::prefix('admin')->middleware('auth:admin')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
-    // Login
-    Route::post('/login', [AdminController::class, 'login'])->name('admin.login');
 
     // Customer CRUD routes
     Route::post('/customers/store', [AdminController::class, 'storeCustomer'])->name('admin.customers.store');

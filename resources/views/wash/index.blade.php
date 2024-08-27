@@ -173,8 +173,15 @@
             // harga ketika kendaraan dipilih
             $('#vehicle_id').change(function() {
                 var price = $(this).find(':selected').data('price');
-                $('#price').val('Rp ' + price.toLocaleString('id-ID'));
+                var formattedPrice = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(price);
+
+                $('#price').val(formattedPrice);
             });
+
 
             // cek nomor telepon terdaftar
             $('#phone').blur(function() {
@@ -189,7 +196,7 @@
                         if (!response.exists) {
                             alert(
                                 'Nomor telepon belum terdaftar. Silakan daftar terlebih dahulu.'
-                                );
+                            );
                             $('#transactionForm').hide();
                         } else {
                             $('#transactionForm').show();
