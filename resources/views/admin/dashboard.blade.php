@@ -16,7 +16,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>No</th>
                         <th>Nama</th>
                         <th>Nomor HP</th>
                         <th>Dibuat Pada</th>
@@ -52,7 +52,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>No</th>
                         <th>Tipe</th>
                         <th>CC</th>
                         <th>Harga Cuci</th>
@@ -84,7 +84,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        {{-- <th>ID</th> --}}
                         <th>Customer</th>
                         <th>Harga</th>
                         <th>Tanggal</th>
@@ -94,7 +94,7 @@
                 <tbody>
                     @foreach ($transactions as $transaction)
                         <tr>
-                            <td>{{ $transaction->id }}</td>
+                            {{-- <td>{{ $transaction->id }}</td> --}}
                             <td>{{ $transaction->customer->name }}</td>
                             <td>{{ $transaction->amount }}</td>
                             <td>{{ $transaction->created_at }}</td>
@@ -247,18 +247,12 @@
             <div class="col-md-3">
                 <div class="card text-white bg-warning mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Customer Mendapat Promo</h5>
-                        <p class="card-text">{{ $transactions->where('status', 'promo')->count() }}</p>
+                        <h5 class="card-title">Customer Yang Dapat Promo</h5>
+                        <p class="card-text">{{ $transactions->where('amount', 0)->count() }}</p>
                     </div>
                 </div>
-            </div>
+            </div>            
         </div>
-        {{-- <h4 class="mt-4">Jenis Kendaraan yang Digunakan dalam Transaksi</h4>
-        <ul>
-            @foreach ($vehicles->pluck('type')->unique() as $vehicleType)
-                <li>{{ $vehicleType }}</li>
-            @endforeach
-        </ul> --}}
     </div>
 
 
