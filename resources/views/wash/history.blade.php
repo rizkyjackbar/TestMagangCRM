@@ -46,10 +46,10 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
                                     <td>{{ $transaction->vehicle->type }}</td>
-                                    <td>Rp {{ number_format($transaction->vehicle->price, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($transaction->amount, 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach
-                        </tbody>
+                        </tbody>                        
                     </table>
                 @endif
             </div>

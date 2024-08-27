@@ -18,44 +18,53 @@ class WashController extends Controller
 
     // transaksi
     public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'phone' => 'required|string',
-            'name' => 'required|string',
-            'vehicle_id' => 'required|exists:vehicles,id',
-        ]);
+{
+    // Validasi input
+    $request->validate([
+        'phone' => 'required|string',
+        'name' => 'required|string',
+        'vehicle_id' => 'required|exists:vehicles,id',
+    ]);
 
-        // Cari customer berdasarkan nomor telepon
-        $customer = Customer::where('phone', $request->phone)->first();
+    // Cari customer berdasarkan nomor telepon
+    $customer = Customer::where('phone', $request->phone)->first();
 
-        // Jika customer belum terdaftar, berikan pesan kesalahan
-        if (!$customer) {
-            return redirect()->back()->with('error', 'Nomor telepon belum terdaftar. Silakan daftar terlebih dahulu.');
-        }
-
-        // Jika customer ditemukan, lanjutkan proses
-        $customer->name = $request->name;
-        $customer->save();
-
-        // Dapatkan data kendaraan berdasarkan vehicle_id
-        $vehicle = Vehicle::find($request->vehicle_id);
-
-        // Buat transaksi baru
-        $transaction = new Transaction();
-        $transaction->customer()->associate($customer);
-        $transaction->vehicle()->associate($vehicle);
-
-        $transaction->save();
-
-        // Cek apakah customer mendapatkan cuci gratis
-        $transactionCount = $customer->transactions()->count();
-        $isFreeWash = $transactionCount % 5 === 0;
-
-        $message = $isFreeWash ? 'Selamat! Anda mendapatkan cuci gratis pada transaksi ini.' : 'Transaksi berhasil!';
-
-        return redirect()->back()->with('message', $message)->with('isFreeWash', $isFreeWash);
+    // Jika customer belum terdaftar, berikan pesan kesalahan
+    if (!$customer) {
+        return redirect()->back()->with('error', 'Nomor telepon belum terdaftar. Silakan daftar terlebih dahulu.');
     }
+
+    // Jika customer ditemukan, lanjutkan proses
+    $customer->name = $request->name;
+    $customer->save();
+
+    // Dapatkan data kendaraan berdasarkan vehicle_id
+    $vehicle = Vehicle::find($request->vehicle_id);
+
+    // Hitung jumlah transaksi sebelum membuat transaksi baru
+    $transactionCount = $customer->transactions()->count();
+
+    // Buat transaksi baru
+    $transaction = new Transaction();
+    $transaction->customer()->associate($customer);
+    $transaction->vehicle()->associate($vehicle);
+
+    // Cek apakah transaksi ini adalah transaksi gratis 
+    $isFreeWash = ($transactionCount + 1) % 5 === 0;
+
+    if ($isFreeWash) {
+        $transaction->amount = 0;
+    } else {
+        $transaction->amount = $vehicle->price;
+    }
+
+    $transaction->save();
+
+    $message = $isFreeWash ? 'Selamat! Anda mendapatkan cuci gratis pada transaksi ini.' : 'Transaksi berhasil!';
+
+    return redirect()->back()->with('message', $message)->with('isFreeWash', $isFreeWash);
+}
+
 
     // riwayat transaksi
     public function history(Request $request)
